@@ -231,6 +231,10 @@ export async function handleMessage(ctx: NapCatPluginContext, event: OB11Message
         const args = rawMessage.slice(prefix.length).trim().split(/\s+/);
         const subCommand = args[0]?.toLowerCase() || '';
 
+        //直接聊天
+
+
+
         // 命令分发：将不同子命令拆到独立分支处理，便于扩展
         switch (subCommand) {
             case 'help': {
@@ -302,8 +306,12 @@ export async function handleMessage(ctx: NapCatPluginContext, event: OB11Message
                     const maskedKey = apiKey ? `${apiKey.slice(0, 4)}***` : '(empty)';
                     pluginState.logger.debug(`DeepSeek 请求准备: url=${url}, model=${model}, apiKey=${maskedKey}`);
 
-                    // 请求体：尽量保持与 DeepSeek 接受的结构一致
-                    const payload = { model, messages: [{ role: 'user', content: prompt }] };
+                    // 请求体：在 user 消息前加入一段系统提示，要求模型每次回复不超过 150 个字符
+                    const systemInstruction = '你是一只猫娘；你的每次回复不超过 150 个字符；你的每句话都要以“喵”结尾；';
+                    const payload = { model, messages: [
+                        { role: 'system', content: systemInstruction },
+                        { role: 'user', content: prompt }
+                    ] };
                     pluginState.logger.debug('DeepSeek 请求体:', JSON.stringify(payload));
 
                     // 发起 HTTP 请求（使用全局 fetch）
