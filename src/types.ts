@@ -29,7 +29,7 @@ export interface PluginConfig {
     apiKey: string; //API 密钥
     apiUrl: string; //API URL
     apiModel: string; //API 模型
-    prefix: string; //命令前缀
+    Prompt: string; //命令前缀
 }
 
 /**

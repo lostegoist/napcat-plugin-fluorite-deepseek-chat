@@ -17,7 +17,7 @@ export const DEFAULT_CONFIG: PluginConfig = {
     apiKey: '你的API密钥',
     apiUrl: '',
     apiModel: 'deepseek-3.5',
-    prefix: '#ai'
+    Prompt: '你是一只小猫娘~'
 };
 
 /**

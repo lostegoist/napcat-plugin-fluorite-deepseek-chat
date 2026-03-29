@@ -307,7 +307,7 @@ export async function handleMessage(ctx: NapCatPluginContext, event: OB11Message
                     pluginState.logger.debug(`DeepSeek 请求准备: url=${url}, model=${model}, apiKey=${maskedKey}`);
 
                     // 请求体：在 user 消息前加入一段系统提示，要求模型每次回复不超过 150 个字符
-                    const systemInstruction = '你是一只猫娘；你的每次回复不超过 150 个字符；你的每句话都要以“喵”结尾；';
+                    const systemInstruction = pluginState.config.Prompt || '你是一只小猫娘~';
                     const payload = { model, messages: [
                         { role: 'system', content: systemInstruction },
                         { role: 'user', content: prompt }
