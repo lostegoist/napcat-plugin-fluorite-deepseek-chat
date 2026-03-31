@@ -13,6 +13,7 @@
 import type { OB11Message, OB11PostSendMsg } from 'napcat-types/napcat-onebot';
 import type { NapCatPluginContext } from 'napcat-types/napcat-onebot/network/plugin/types';
 import { pluginState } from '../core/state';
+import { OB11MessageDataType } from 'napcat-types/napcat-onebot/types/message';
 
 /*
  * 关于类型导入：
@@ -353,13 +354,28 @@ export async function handleMessage(ctx: NapCatPluginContext, event: OB11Message
                         else if (Array.isArray(c0.message?.content) && c0.message.content[0]) aiReply = String(c0.message.content[0]);
                     }
 
+                    const messageContent = [
+                        {
+                            type: OB11MessageDataType.at,
+                            data: { 
+                                qq: userId 
+                            }
+                        },
+                        {
+                            type: OB11MessageDataType.text,
+                            data: { 
+                                text: ` ${aiReply}` 
+                            }
+                        }
+                    ];
+                    
                     if (!aiReply) {
                         // 若仍无法解析，记录完整结构用于离线排查，并给用户友好提示
                         pluginState.logger.error('无法从 DeepSeek 响应中解析出回复，响应结构:', JSON.stringify(data));
                         await sendReply(ctx, event, '抱歉，AI 返回格式无法解析。');
                     } else {
                         // 回复用户并更新冷却/统计
-                        await sendReply(ctx, event, aiReply);
+                        await sendReply(ctx, event, messageContent as OB11PostSendMsg['message']);
                         if (messageType === 'group' && groupId) setCooldown(groupId, 'ai');
                         pluginState.incrementProcessed();
                     }
