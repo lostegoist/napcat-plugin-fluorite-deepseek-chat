@@ -18,7 +18,10 @@ export interface PluginConfig {
     commandPrefix: string
     cooldownSeconds: number
     groupConfigs?: Record<string, GroupConfig>
-    // TODO: 在这里添加你的插件配置项类型
+    apiKey: string
+    apiUrl: string
+    apiModel: string
+    Prompt: string
 }
 
 export interface GroupConfig {

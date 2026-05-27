@@ -48,13 +48,11 @@ function sanitizeConfig(raw: unknown): PluginConfig {
         }
     }
 
-    // API 与其他配置项清洗
-    if (typeof (raw as any).apiKey === 'string') out.apiKey = (raw as any).apiKey;
-    if (typeof (raw as any).apiUrl === 'string') out.apiUrl = (raw as any).apiUrl;
-    if (typeof (raw as any).apiModel === 'string') out.apiModel = (raw as any).apiModel;
-    if (typeof (raw as any).prefix === 'string') out.prefix = (raw as any).prefix;
-
-    // TODO: 在这里添加你的配置项清洗逻辑
+    // DeepSeek 与系统提示词清洗
+    if (typeof raw.apiKey === 'string') out.apiKey = raw.apiKey;
+    if (typeof raw.apiUrl === 'string') out.apiUrl = raw.apiUrl;
+    if (typeof raw.apiModel === 'string') out.apiModel = raw.apiModel;
+    if (typeof raw.Prompt === 'string') out.Prompt = raw.Prompt;
 
     return out;
 }

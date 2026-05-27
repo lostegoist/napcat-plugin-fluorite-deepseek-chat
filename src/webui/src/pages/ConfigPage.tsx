@@ -81,13 +81,45 @@ export default function ConfigPage() {
                         onChange={(v) => updateField('commandPrefix', v)}
                     />
                     <InputRow
-                        label="冷却时间 (秒)"
-                        desc="同一命令请求冷却时间，0 表示不限制"
+                        label="AI 冷却时间 (秒)"
+                        desc="群内两次 @ 对话的最小间隔，0 表示不限制"
                         value={String(config.cooldownSeconds)}
                         type="number"
                         onChange={(v) => updateField('cooldownSeconds', Number(v) || 0)}
                     />
-                    {/* TODO: 在这里添加你的配置项 */}
+                </div>
+            </div>
+
+            <div className="card p-5 hover-lift">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2 mb-5">
+                    <IconTerminal size={16} className="text-gray-400" />
+                    DeepSeek 配置
+                </h3>
+                <div className="space-y-5">
+                    <InputRow
+                        label="API 地址"
+                        desc="默认 https://api.deepseek.com"
+                        value={config.apiUrl ?? ''}
+                        onChange={(v) => updateField('apiUrl', v)}
+                    />
+                    <InputRow
+                        label="API Key"
+                        desc="DeepSeek 密钥，保存后请妥善保管"
+                        value={config.apiKey ?? ''}
+                        onChange={(v) => updateField('apiKey', v)}
+                    />
+                    <InputRow
+                        label="模型"
+                        desc="如 deepseek-chat、deepseek-reasoner"
+                        value={config.apiModel ?? 'deepseek-chat'}
+                        onChange={(v) => updateField('apiModel', v)}
+                    />
+                    <TextAreaRow
+                        label="系统提示词"
+                        desc="每次对话都会作为 system 消息发送；留空则使用插件内置默认提示词"
+                        value={config.Prompt ?? ''}
+                        onChange={(v) => updateField('Prompt', v)}
+                    />
                 </div>
             </div>
 
@@ -116,6 +148,30 @@ function ToggleRow({ label, desc, checked, onChange }: {
                 <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
                 <div className="slider" />
             </label>
+        </div>
+    )
+}
+
+function TextAreaRow({ label, desc, value, onChange }: {
+    label: string; desc: string; value: string; onChange: (v: string) => void
+}) {
+    const [local, setLocal] = useState(value)
+    useEffect(() => { setLocal(value) }, [value])
+
+    const handleBlur = () => {
+        if (local !== value) onChange(local)
+    }
+
+    return (
+        <div>
+            <div className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{label}</div>
+            <div className="text-xs text-gray-400 mb-2">{desc}</div>
+            <textarea
+                className="input-field min-h-[120px] resize-y"
+                value={local}
+                onChange={(e) => setLocal(e.target.value)}
+                onBlur={handleBlur}
+            />
         </div>
     )
 }
